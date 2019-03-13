@@ -14,6 +14,12 @@ import java.util.Map;
 import java.util.Set;
 
 
+/**
+ * 输入面板自定义控件, 包外可见, 抽象
+ *
+ * @author albert
+ * 20181225
+ */
 public abstract class AbsIpView extends FrameLayout implements IpFuncMgr.OnFuncStatusActivateListener {
 
     private IpFuncMgr mIPFM;

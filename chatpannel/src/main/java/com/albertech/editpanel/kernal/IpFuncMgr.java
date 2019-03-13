@@ -21,14 +21,30 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
+/**
+ * 输入面板管理类, 逻辑核心, 包内可见, 不可继承
+ *
+ * @author albert
+ * 20181225
+ */
 final class IpFuncMgr extends Handler implements IDefaultFuncStatus, View.OnClickListener, View.OnAttachStateChangeListener, ViewTreeObserver.OnGlobalLayoutListener {
 
+    /**
+     * 输入面板状态切换监听
+     */
     interface OnFuncStatusActivateListener {
         void onFuncActivate(int funcStatus);
     }
 
 
+    /**
+     * 扩展功能集合, Key: 扩展功能的激活入口按钮id, Value: 扩展功能
+     */
     private final Map<Integer, IFunc> FUNCS = new ConcurrentHashMap<>();
+
+    /**
+     * 扩展功能入口按钮集合, Key: 扩展功能的激活入口按钮id, Value: 按钮View实例
+     */
     private final Map<Integer, View> TRIGGERS = new ConcurrentHashMap<>();
 
 
@@ -56,43 +72,52 @@ final class IpFuncMgr extends Handler implements IDefaultFuncStatus, View.OnClic
         super(looper);
     }
 
-    final void setFragmentManager(FragmentManager fm) {
+
+    void setFragmentManager(FragmentManager fm) {
         mFM = fm;
     }
 
-    final void setRootView(View rootView) {
+    void setRootView(View rootView) {
         mRootView = rootView;
     }
 
-    final void setEditId(int editId) {
+    void setEditId(int editId) {
         mEditId = editId;
     }
 
-    final void setContainerId(int containerId) {
+    void setContainerId(int containerId) {
         mContainerId = containerId;
     }
 
-    final void setListener(IpFuncMgr.OnFuncStatusActivateListener listener) {
+    void setListener(IpFuncMgr.OnFuncStatusActivateListener listener) {
         mListener = listener;
     }
 
-    final void setDefaultContainerHeight(int height) {
+    void setDefaultContainerHeight(int height) {
         mContainerTargetHeight = height;
     }
 
-    final void setContainerHeightCoordinate(boolean coordinate) {
+    void setContainerHeightCoordinate(boolean coordinate) {
         mContainerHeightCoordinate = coordinate;
     }
 
-    final void setMaxContainerHeight(int height) {
+    void setMaxContainerHeight(int height) {
         mMaxContainerHeight = height;
     }
 
-    final void setContainerReplaceMode(boolean replace) {
+    void setContainerReplaceMode(boolean replace) {
         mContainerReplaceMode = replace;
     }
 
-    final void registerFunc(IFunc func) {
+
+    void init() {
+        initView();
+        initIMM();
+        registerFunc(new HideFunc());
+        registerFunc(new InputFunc());
+    }
+
+    void registerFunc(IFunc func) {
         if (func != null) {
             FUNCS.put(func.activatedStatus(), func);
             View trigger = mRootView.findViewById(func.triggerId());
@@ -103,12 +128,7 @@ final class IpFuncMgr extends Handler implements IDefaultFuncStatus, View.OnClic
         }
     }
 
-    final void hide() {
-        dormantAllFuncsExceptTrigger(0);
-        sendEmptyMessage(FUNC_HIDE);
-    }
-
-    final void onFuncRegisterComplete() {
+    void onFuncRegisterComplete() {
         if (!mContainerReplaceMode) {
             FragmentTransaction transaction = mFM.beginTransaction();
             for (int status : FUNCS.keySet()) {
@@ -124,30 +144,17 @@ final class IpFuncMgr extends Handler implements IDefaultFuncStatus, View.OnClic
         }
     }
 
-    final Map<Integer, IFunc> getRegisteredFuncs() {
+    Map<Integer, IFunc> getRegisteredFuncs() {
         Map<Integer, IFunc> map = new ConcurrentHashMap<>(FUNCS);
         return map;
     }
 
-    final void setFuncStatus(int status) {
-        if (FUNCS.containsKey(status)) {
-            prepareInput(status);
-            prepareContainer(status);
-            prepareContent(status);
-            mCurrentStatus = status;
-            if (mListener != null) {
-                mListener.onFuncActivate(mCurrentStatus);
-            }
-        }
+    void hide() {
+        dormantAllFuncsExceptTrigger(0);
+        sendEmptyMessage(FUNC_HIDE);
     }
 
 
-    final void init() {
-        initView();
-        initIMM();
-        registerFunc(new HideFunc());
-        registerFunc(new InputFunc());
-    }
 
     private void initView() {
         mEt = mRootView.findViewById(mEditId);
@@ -163,6 +170,23 @@ final class IpFuncMgr extends Handler implements IDefaultFuncStatus, View.OnClic
 
     private void initIMM() {
         mIMM = (InputMethodManager) mRootView.getContext().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+    }
+
+    private void setFuncStatus(int status) {
+        if (FUNCS.containsKey(status)) {
+            // 根据新状态处理系统输入法
+            prepareInput(status);
+            // 根据新状态处理扩展功能区域容器
+            prepareContainer(status);
+            // 根据新状态处理扩展功能Fragment的填充或切换
+            prepareContent(status);
+            // 用新状态覆盖上一状态, 使之成为当前状态
+            mCurrentStatus = status;
+            // 通知状态变化监听器
+            if (mListener != null) {
+                mListener.onFuncActivate(mCurrentStatus);
+            }
+        }
     }
 
     private void dormantAllFuncsExceptTrigger(int triggerId) {
@@ -183,18 +207,37 @@ final class IpFuncMgr extends Handler implements IDefaultFuncStatus, View.OnClic
         }
     }
 
+    /**
+     * 根据新状态处理系统输入法
+     *
+     * @param status 新状态
+     */
     private void prepareInput(int status) {
         if (status == FUNC_INPUT) {
+            // 只有输入框获得焦点后, 系统输入法管理才能借助其弹起输入法
+            mEt.requestFocus();
+            // 弹起系统输入法
             mIMM.showSoftInput(mEt, InputMethodManager.SHOW_IMPLICIT);
         } else {
+            // 收起系统输入法
             mIMM.hideSoftInputFromWindow(mEt.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
+    /**
+     * 根据新状态处理扩展功能区域容器
+     *
+     * @param status 新状态
+     */
     private void prepareContainer(int status) {
         mContainer.setTargetHeight(FUNCS.get(status).needContainer() ? mContainerTargetHeight : 0);
     }
 
+    /**
+     * 根据新状态处理扩展功能Fragment的填充或切换
+     *
+     * @param status 新状态
+     */
     private void prepareContent(int status) {
         Fragment target = FUNCS.get(status).content();
         FragmentTransaction transaction = mFM.beginTransaction();
@@ -214,23 +257,23 @@ final class IpFuncMgr extends Handler implements IDefaultFuncStatus, View.OnClic
 
 
     @Override
-    public final void onClick(View v) {
+    public void onClick(View v) {
         dormantAllFuncsExceptTrigger(v.getId());
     }
 
     @Override
-    public final void onViewAttachedToWindow(View v) {
+    public void onViewAttachedToWindow(View v) {
         v.getViewTreeObserver().addOnGlobalLayoutListener(this);
     }
 
     @Override
-    public final void onViewDetachedFromWindow(View v) {
+    public void onViewDetachedFromWindow(View v) {
         v.getViewTreeObserver().removeOnGlobalLayoutListener(this);
         v.removeOnAttachStateChangeListener(this);
     }
 
     @Override
-    public final void onGlobalLayout() {
+    public void onGlobalLayout() {
         int currentInputMethodHeight = IpUtil.getInputMethodHeight(mRootView);
         if (mLastInputMethodHeight != currentInputMethodHeight) {
             mLastInputMethodHeight = currentInputMethodHeight;
