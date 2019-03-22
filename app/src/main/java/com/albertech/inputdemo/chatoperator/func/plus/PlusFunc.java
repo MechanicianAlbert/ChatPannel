@@ -1,23 +1,38 @@
 package com.albertech.inputdemo.chatoperator.func.plus;
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
+
+import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.albertech.inputdemo.R;
+import com.albertech.inputdemo.base.BasePagerAdapter;
+import com.albertech.inputdemo.chatoperator.view.PagerDotIndicator;
 
-public class PlusFunc extends PlusIFunc {
 
-    @Nullable
+public class PlusFunc extends PlusFuncFragment {
+
+    private ViewPager mVpPlus;
+    private PagerDotIndicator mIndicator;
+
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_func_emoji, container, false);
-        TextView tv = root.findViewById(R.id.tv);
-        tv.setText("加号");
-        return root;
+    protected int layoutRes() {
+        return R.layout.fragment_func_plus;
+    }
+
+    @Override
+    protected void initView(View rootView) {
+        mVpPlus = rootView.findViewById(R.id.vp_ip_func_plus);
+        mIndicator = rootView.findViewById(R.id.pi_ip_func_plus_indicator);
+    }
+
+    @Override
+    protected void initData() {
+        BasePagerAdapter<View> adapter = new BasePagerAdapter<>();
+        adapter.updatePagers(PlusUtil.createPlusPagers(getContext()));
+        mVpPlus.setAdapter(adapter);
+        mIndicator.setUpWithViewPager(mVpPlus);
+
+        mIndicator.setVisibility(adapter.getCount() < 2 ? View.GONE : View.VISIBLE);
     }
 }

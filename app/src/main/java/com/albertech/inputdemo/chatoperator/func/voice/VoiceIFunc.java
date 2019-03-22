@@ -25,12 +25,12 @@ public class VoiceIFunc extends BaseFuncFragment  implements IFuncStatus {
 
     @Override
     public int activatedRes() {
-        return R.drawable.ip_btn_voice;
+        return R.drawable.selector_ip_btn_voice;
     }
 
     @Override
     public int dormantRes() {
-        return R.drawable.ip_btn_keyboard;
+        return R.drawable.selector_ip_btn_keyboard;
     }
 
     @Override

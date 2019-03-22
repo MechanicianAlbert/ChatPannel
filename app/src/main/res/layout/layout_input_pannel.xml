@@ -1,53 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
+        android:gravity="bottom"
         android:orientation="horizontal"
-        android:padding="20dp">
+        android:padding="@dimen/input_pannel_padding">
 
         <View
             android:id="@+id/btn_voice"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/ip_btn_voice" />
+            android:layout_width="@dimen/input_pannel_btn_size"
+            android:layout_height="@dimen/input_pannel_btn_size"
+            android:background="@drawable/selector_ip_btn_voice" />
 
-        <EditText
-            android:id="@+id/et"
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_marginLeft="@dimen/input_pannel_margin"
+            android:layout_marginRight="@dimen/input_pannel_margin"
+            android:layout_weight="1">
 
-        <Button
-            android:id="@+id/btn_talk"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="按住说话" />
+            <EditText
+                android:id="@+id/et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:background="@drawable/shape_ip_edit_text"
+                android:gravity="center_vertical"
+                android:maxLines="4" />
+
+            <TextView
+                android:id="@+id/btn_talk"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/input_pannel_btn_size"
+                android:layout_gravity="center_horizontal|bottom"
+                android:background="@drawable/shape_ip_btn_talk"
+                android:gravity="center"
+                android:text="@string/str_btn_press_to_talk" />
+        </FrameLayout>
 
         <View
             android:id="@+id/btn_emoji"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/ip_btn_emoji" />
+            android:layout_width="@dimen/input_pannel_btn_size"
+            android:layout_height="@dimen/input_pannel_btn_size"
+            android:background="@drawable/selector_ip_btn_emoji" />
 
-        <View
-            android:id="@+id/btn_plus"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/ip_btn_plus" />
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/input_pannel_margin">
+
+            <View
+                android:id="@+id/btn_plus"
+                android:layout_width="@dimen/input_pannel_btn_size"
+                android:layout_height="@dimen/input_pannel_btn_size"
+                android:background="@drawable/selector_ip_btn_plus" />
+
+            <TextView
+                android:id="@+id/btn_send"
+                android:layout_width="@dimen/input_pannel_btn_size"
+                android:layout_height="@dimen/input_pannel_btn_send_height"
+                android:layout_gravity="center_vertical"
+                android:background="@color/colorAccent"
+                android:gravity="center"
+                android:text="@string/str_btn_send"
+                android:textColor="@color/colorWhite"
+                android:visibility="invisible" />
+        </FrameLayout>
     </LinearLayout>
 
-    <GridView
-        android:id="@+id/gv"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:numColumns="5" />
+        android:layout_height="1dp"
+        android:background="@color/colorGray" />
 
     <com.albertech.editpanel.kernal.IpFuncContainer
         android:id="@+id/container"

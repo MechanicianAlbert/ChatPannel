@@ -20,7 +20,7 @@ import java.util.Set;
  * @author albert
  * 20181225
  */
-public abstract class AbsIpView extends FrameLayout implements IpFuncMgr.OnFuncStatusActivateListener {
+public abstract class AbsIpView extends FrameLayout implements IpFuncMgrImpl.OnFuncStatusActivateListener {
 
     private IpFuncMgr mIPFM;
     private View mRootView;
@@ -78,7 +78,7 @@ public abstract class AbsIpView extends FrameLayout implements IpFuncMgr.OnFuncS
 
     public final void setFuncStatus(int status) {
         if (mIPFM != null) {
-            mIPFM.sendEmptyMessage(status);
+            mIPFM.setFuncStatus(status);
         }
     }
 

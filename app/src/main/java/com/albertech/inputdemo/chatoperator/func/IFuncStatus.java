@@ -2,6 +2,8 @@ package com.albertech.inputdemo.chatoperator.func;
 
 import com.albertech.editpanel.base.IDefaultFuncStatus;
 
+
+
 public interface IFuncStatus extends IDefaultFuncStatus {
 
     class Helper {
@@ -17,12 +19,6 @@ public interface IFuncStatus extends IDefaultFuncStatus {
                     return "加号";
                 case FUNC_VOICE:
                     return "短语音";
-                case FUNC_ALBUM:
-                    return "相册";
-                case FUNC_CAMERA:
-                    return "拍照";
-                case FUNC_VIDEO:
-                    return "短视频";
                 case FUNC_STT:
                     return "语音识别";
                 default:

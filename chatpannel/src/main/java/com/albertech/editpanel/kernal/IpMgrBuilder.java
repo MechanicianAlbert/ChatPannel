@@ -27,7 +27,7 @@ public final class IpMgrBuilder {
     private int mContainerId;
 
     // 输入面板状态切换监听
-    private IpFuncMgr.OnFuncStatusActivateListener mListener;
+    private IpFuncMgrImpl.OnFuncStatusActivateListener mListener;
 
     // 默认容器高度
     private int mDefaultContainerHeight;
@@ -69,7 +69,7 @@ public final class IpMgrBuilder {
     }
 
 
-    public IpMgrBuilder setListener(IpFuncMgr.OnFuncStatusActivateListener listener) {
+    public IpMgrBuilder setListener(IpFuncMgrImpl.OnFuncStatusActivateListener listener) {
         mListener = listener;
         return this;
     }
@@ -100,7 +100,7 @@ public final class IpMgrBuilder {
      * @return
      */
     IpFuncMgr build() {
-        IpFuncMgr manager = new IpFuncMgr(Looper.getMainLooper());
+        IpFuncMgrImpl manager = new IpFuncMgrImpl(Looper.getMainLooper());
         manager.setFragmentManager(mFM);
         manager.setRootView(mRootView);
         manager.setEditId(mEditId);
