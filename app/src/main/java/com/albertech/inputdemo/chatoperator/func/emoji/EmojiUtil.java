@@ -26,6 +26,19 @@ public class EmojiUtil implements Emojis {
         return 0;
     }
 
+    public static String getEmojiPattern() {
+        StringBuffer sb = new StringBuffer("");
+        for (int page = 0; page < ALL_CODE.length; page++) {
+            for (int index = 0; index < ALL_CODE[page].length; index++) {
+                sb.append(ALL_CODE[page][index]);
+            }
+        }
+        String pattern = sb.toString()
+                .replace("[", "(\\[")
+                .replace("]", "\\])?");
+        return pattern;
+    }
+
     public static List<View> creatEmojiPagers(Context context, OnEmojiClickListener listener) {
         List<View> list = new ArrayList<>();
         for (int i = 0; i < 5; i++) {

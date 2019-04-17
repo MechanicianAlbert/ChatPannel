@@ -24,7 +24,8 @@
             android:layout_marginRight="@dimen/input_pannel_margin"
             android:layout_weight="1">
 
-            <EditText
+            <!--<EditText-->
+            <com.albertech.inputdemo.chatoperator.view.EmojiEditor
                 android:id="@+id/et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
