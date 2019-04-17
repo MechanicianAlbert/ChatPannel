@@ -2,5 +2,7 @@ package com.albertech.inputdemo.base;
 
 public interface OnItemClickListener<Bean> {
 
-    void onItemClick(int position, Bean bean);
+    boolean onItemClick(int position, Bean bean);
+
+    boolean onItemLongClick(int position, Bean bean);
 }

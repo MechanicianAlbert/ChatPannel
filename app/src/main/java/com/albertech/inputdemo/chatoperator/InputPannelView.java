@@ -13,23 +13,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-
-
-
 import com.albertech.editpanel.base.IFunc;
 import com.albertech.editpanel.kernal.AbsIpView;
 import com.albertech.editpanel.kernal.IpMgrBuilder;
 import com.albertech.inputdemo.R;
 import com.albertech.inputdemo.chatoperator.func.IFuncStatus;
 import com.albertech.inputdemo.chatoperator.func.emoji.EmojiFunc;
+import com.albertech.inputdemo.chatoperator.func.emoji.OnEmojiClickListener;
 import com.albertech.inputdemo.chatoperator.func.plus.PlusFunc;
 import com.albertech.inputdemo.chatoperator.func.voice.VoiceIFunc;
 
 import java.util.Set;
 
+
+
+
 public class InputPannelView extends AbsIpView implements IFuncStatus {
 
     private final TextWatcher TEXT_WATCHER = new TextWatcher() {
+
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -42,6 +44,18 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
 
         @Override
         public void afterTextChanged(Editable editable) {
+
+        }
+    };
+
+    private final OnEmojiClickListener EMOJI_WATCH = new OnEmojiClickListener() {
+        @Override
+        public void onEmojiClick(String code) {
+
+        }
+
+        @Override
+        public void onBackspaceClick() {
 
         }
     };

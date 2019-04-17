@@ -10,9 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class BaseRecyclerAdapter<Bean> extends RecyclerView.Adapter<BaseHolder<Bean>> implements OnItemClickListener<Bean> {
+public abstract class BaseRecyclerAdapter<Holder extends BaseHolder<? extends BaseRecyclerAdapter, Bean>, Bean> extends RecyclerView.Adapter<Holder>
+        implements OnItemClickListener<Bean> {
 
-    private final List<Bean> DATA = new ArrayList<>(30);
+    private final List<Bean> DATA = new ArrayList<>();
 
 
     public void updateData(List<Bean> data) {
@@ -21,8 +22,7 @@ public abstract class BaseRecyclerAdapter<Bean> extends RecyclerView.Adapter<Bas
         notifyDataSetChanged();
     }
 
-
-    protected Bean getItemData(int position) {
+    protected Bean getItem(int position) {
         return DATA.get(position);
     }
 
@@ -34,26 +34,27 @@ public abstract class BaseRecyclerAdapter<Bean> extends RecyclerView.Adapter<Bas
 
     @NonNull
     @Override
-    public final BaseHolder<Bean> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(getLayoutResByViewType(viewType), parent, false);
-        BaseHolder<Bean> holder = getHolderByViewType(viewType, itemView);
-        holder.setAdapter(this);
-        return holder;
+    public final Holder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+        View itemView = inflater.inflate(viewType, viewGroup, false);
+        return getHolderByViewType(itemView, viewType);
     }
 
     @Override
-    public final void onBindViewHolder(@NonNull BaseHolder<Bean> holder, int position) {
-        holder.onBind(position, DATA.get(position));
+    public final void onBindViewHolder(@NonNull Holder viewHolder, int position) {
+        viewHolder.onBind(position, DATA.get(position));
     }
 
     @Override
-    public void onItemClick(int position, Bean bean) {
+    public boolean onItemClick(int position, Bean bean) {
+        return false;
+    }
 
+    @Override
+    public boolean onItemLongClick(int position, Bean bean) {
+        return false;
     }
 
 
-    protected abstract int getLayoutResByViewType(int viewType);
-
-    protected abstract BaseHolder<Bean> getHolderByViewType(int viewType, View itemView);
-
+    protected abstract Holder getHolderByViewType(View itemView, int viewType);
 }

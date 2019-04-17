@@ -68,8 +68,7 @@ public class PagerDotIndicator extends LinearLayout implements View.OnClickListe
     }
 
     private void selectDotByCurrentIndex(int index) {
-        int childCount = getChildCount();
-        for (int i = 0; i < childCount; i++) {
+        for (int i = 0; i < getChildCount(); i++) {
             getChildAt(i).setSelected(i == index);
         }
     }
@@ -87,8 +86,10 @@ public class PagerDotIndicator extends LinearLayout implements View.OnClickListe
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        mVp.removeOnPageChangeListener(this);
-        mVp = null;
+        if (mVp != null) {
+            mVp.removeOnPageChangeListener(this);
+            mVp = null;
+        }
     }
 
     @Override

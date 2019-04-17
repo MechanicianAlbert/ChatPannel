@@ -31,7 +31,7 @@ public class EmojiUtil implements Emojis {
     }
 
     private static void fillPageWithEmojiData(RecyclerView rv, int pageIndex) {
-        EmojiSinglePageAdapter adapter = new EmojiSinglePageAdapter();
+        EmojiGroupAdapter adapter = new EmojiGroupAdapter();
         adapter.updateData(createEmojiListWithPageIndex(pageIndex));
         rv.setLayoutManager(new GridLayoutManager(rv.getContext(), 7));
         rv.setAdapter(adapter);

@@ -28,19 +28,22 @@ public abstract class AbsIpView extends FrameLayout implements IpFuncMgrImpl.OnF
 
     public AbsIpView(@NonNull Context context) {
         super(context);
-        init();
     }
 
     public AbsIpView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public AbsIpView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
     }
 
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        init();
+    }
 
     private void init() {
         initView();
@@ -89,6 +92,7 @@ public abstract class AbsIpView extends FrameLayout implements IpFuncMgrImpl.OnF
             return null;
         }
     }
+
 
     protected abstract int layoutRes();
 

@@ -6,80 +6,74 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
-public abstract class BaseHolder<Bean> extends RecyclerView.ViewHolder implements View.OnClickListener, OnItemClickListener<Bean> {
+public class BaseHolder<Adapter extends BaseRecyclerAdapter<? extends BaseHolder, Bean>, Bean> extends RecyclerView.ViewHolder
+        implements View.OnClickListener, View.OnLongClickListener, OnItemClickListener<Bean> {
 
     private final SparseArray<View> VIEWS = new SparseArray<>();
-    private final View mRootView;
-    private BaseRecyclerAdapter<Bean> mAdapter;
+
+    private Adapter mAdapter;
+    private View mItemView;
 
 
-    public BaseHolder(@NonNull View itemView) {
+    public BaseHolder(Adapter adapter, @NonNull View itemView) {
         super(itemView);
-        mRootView = itemView;
-        mRootView.setOnClickListener(this);
-        onCreate();
-    }
-
-
-    @Override
-    public final void onClick(View v) {
-        onItemClick(getAdapterPosition(), getItemData(getAdapterPosition()));
-        getAdapter().onItemClick(getAdapterPosition(), getItemData(getAdapterPosition()));
-    }
-
-
-    private void onRealBind(int position, Bean bean) {
-        onBind(position, bean);
-    }
-
-
-    void setAdapter(BaseRecyclerAdapter<Bean> adapter) {
         mAdapter = adapter;
+        mItemView = itemView;
+        mItemView.setOnClickListener(this);
+        mItemView.setOnLongClickListener(this);
     }
 
 
-    protected final BaseRecyclerAdapter<Bean> getAdapter() {
-        return mAdapter;
-    }
-
-    protected final Bean getItemData(int position) {
-        return mAdapter.getItemData(position);
-    }
-
-    protected final void notifyAdapterDataSetChanged() {
-        mAdapter.notifyDataSetChanged();
-    }
-
-    protected final View getRootView() {
-        return mRootView;
+    protected final <V extends View> V $(@IdRes int id) {
+        V v;
+        if ((v = (V) VIEWS.get(id)) == null) {
+            v = mItemView.findViewById(id);
+            VIEWS.put(id, v);
+        }
+        return v;
     }
 
     protected final Context getContext() {
-        return mRootView.getContext().getApplicationContext();
+        return mItemView.getContext();
     }
 
-    protected final <V extends View> V $(@IdRes int idRes) {
-        View v = VIEWS.get(idRes);
-        if (v != null) {
-            return (V) v;
-        } else {
-            V view = mRootView.findViewById(idRes);
-            VIEWS.put(idRes, view);
-            return view;
+    protected final View getItemView() {
+        return mItemView;
+    }
+
+    protected final Adapter getAdapter() {
+        return mAdapter;
+    }
+
+    protected final void setText(int id, String text) {
+        TextView tv = $(id);
+        if (tv != null) {
+            tv.setText(text);
         }
     }
 
-    protected final void setSelected(@IdRes int id, boolean selected) {
-        $(id).setSelected(selected);
+    protected final void setImage(int id, int drawableRes) {
+        ImageView iv = $(id);
+        if (iv != null) {
+            iv.setImageResource(drawableRes);
+        }
     }
 
-    protected final void setText(@IdRes int id, String string) {
-        TextView tv = $(id);
-        tv.setText(string);
+    protected final void setSelected(int id, boolean selected) {
+        View v = $(id);
+        if (v != null) {
+            v.setSelected(selected);
+        }
     }
+
+    protected final Bean getItem(int position) {
+        return mAdapter.getItem(position);
+    }
+
 
     protected void onCreate() {
 
@@ -90,8 +84,32 @@ public abstract class BaseHolder<Bean> extends RecyclerView.ViewHolder implement
     }
 
     @Override
-    public void onItemClick(int position, Bean bean) {
+    public boolean onItemClick(int position, Bean bean) {
+        return false;
+    }
 
+    @Override
+    public boolean onItemLongClick(int position, Bean bean) {
+        return false;
+    }
+
+    @Override
+    public final void onClick(View view) {
+        int position = getAdapterPosition();
+        Bean bean = getItem(position);
+        if (!onItemClick(position, bean)) {
+            mAdapter.onItemClick(position, bean);
+        }
+    }
+
+    @Override
+    public final boolean onLongClick(View view) {
+        int position = getAdapterPosition();
+        Bean bean = getItem(position);
+        if (!onItemLongClick(position, bean)) {
+            mAdapter.onItemLongClick(position, bean);
+        }
+        return false;
     }
 
 }
