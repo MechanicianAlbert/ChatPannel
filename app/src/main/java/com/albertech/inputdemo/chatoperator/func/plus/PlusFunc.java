@@ -11,8 +11,17 @@ import com.albertech.inputdemo.chatoperator.view.PagerDotIndicator;
 
 public class PlusFunc extends PlusFuncFragment {
 
+    private OnPlusItemClickListener mListener;
+
     private ViewPager mVpPlus;
     private PagerDotIndicator mIndicator;
+
+
+    public static PlusFunc newInstance(OnPlusItemClickListener listener) {
+        PlusFunc pf = new PlusFunc();
+        pf.mListener = listener;
+        return pf;
+    }
 
 
     @Override
@@ -29,10 +38,9 @@ public class PlusFunc extends PlusFuncFragment {
     @Override
     protected void initData() {
         BasePagerAdapter<View> adapter = new BasePagerAdapter<>();
-        adapter.updatePagers(PlusUtil.createPlusPagers(getContext()));
+        adapter.updatePagers(PlusUtil.createPlusPagers(getContext(), mListener));
         mVpPlus.setAdapter(adapter);
         mIndicator.setUpWithViewPager(mVpPlus);
-
         mIndicator.setVisibility(adapter.getCount() < 2 ? View.GONE : View.VISIBLE);
     }
 }

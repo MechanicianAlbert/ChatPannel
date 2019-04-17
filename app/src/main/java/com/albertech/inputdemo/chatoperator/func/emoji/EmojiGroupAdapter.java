@@ -1,7 +1,6 @@
 package com.albertech.inputdemo.chatoperator.func.emoji;
 
 
-import android.util.Log;
 import android.view.View;
 
 import com.albertech.inputdemo.R;
@@ -21,13 +20,4 @@ public class EmojiGroupAdapter extends BaseRecyclerAdapter<EmojiHolder, EmojiBea
         return new EmojiHolder(this, itemView);
     }
 
-    @Override
-    public boolean onItemClick(int position, EmojiBean emojiBean) {
-        if (position == getItemCount() - 1) {
-            Log.e("AAA", "Delete");
-        } else {
-            Log.e("AAA", "Res: " + emojiBean.getRes() + ", Code: " + emojiBean.getCode());
-        }
-        return false;
-    }
 }

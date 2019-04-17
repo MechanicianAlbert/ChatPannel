@@ -237,4 +237,20 @@ interface Emojis {
     };
 
 
+    int[][] ALL_RES = {
+            PAGE_0_RES,
+            PAGE_1_RES,
+            PAGE_2_RES,
+            PAGE_3_RES,
+            PAGE_4_RES
+    };
+
+    String[][] ALL_CODE = {
+            PAGE_0_CODE,
+            PAGE_0_CODE,
+            PAGE_0_CODE,
+            PAGE_0_CODE,
+            PAGE_0_CODE
+    };
+
 }

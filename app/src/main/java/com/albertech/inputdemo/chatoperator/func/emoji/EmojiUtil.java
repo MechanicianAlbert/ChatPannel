@@ -1,8 +1,10 @@
 package com.albertech.inputdemo.chatoperator.func.emoji;
 
+
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.albertech.inputdemo.R;
@@ -13,25 +15,47 @@ import java.util.List;
 
 public class EmojiUtil implements Emojis {
 
+    public static int getDrawableResByCode(String code) {
+        for (int page = 0; page < ALL_CODE.length; page++) {
+            for (int index = 0; index < ALL_CODE[page].length; index++) {
+                if (TextUtils.equals(ALL_CODE[page][index], code)) {
+                    return ALL_RES[page][index];
+                }
+            }
+        }
+        return 0;
+    }
 
-    public static List<View> creatEmojiPagers(Context context) {
+    public static List<View> creatEmojiPagers(Context context, OnEmojiClickListener listener) {
         List<View> list = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            list.add(createSingleEmojiPage(context, i));
+            list.add(createSingleEmojiPage(context, i, listener));
         }
         return list;
     }
 
 
-    private static View createSingleEmojiPage(Context context, int pageIndex) {
+    private static View createSingleEmojiPage(Context context, int pageIndex, OnEmojiClickListener listener) {
         View page = View.inflate(context, R.layout.item_emoji_page, null);
         RecyclerView rv = page.findViewById(R.id.rv_page_emoji);
-        fillPageWithEmojiData(rv, pageIndex);
+        fillPageWithEmojiData(rv, pageIndex, listener);
         return page;
     }
 
-    private static void fillPageWithEmojiData(RecyclerView rv, int pageIndex) {
-        EmojiGroupAdapter adapter = new EmojiGroupAdapter();
+    private static void fillPageWithEmojiData(RecyclerView rv, int pageIndex, final OnEmojiClickListener listener) {
+        EmojiGroupAdapter adapter = new EmojiGroupAdapter() {
+            @Override
+            public boolean onItemClick(int position, EmojiBean emojiBean) {
+                if (listener != null) {
+                    if (position == getItemCount() - 1) {
+                        listener.onBackspaceClick();
+                    } else {
+                        listener.onEmojiClick(emojiBean.getRes(), emojiBean.getCode());
+                    }
+                }
+                return false;
+            }
+        };
         adapter.updateData(createEmojiListWithPageIndex(pageIndex));
         rv.setLayoutManager(new GridLayoutManager(rv.getContext(), 7));
         rv.setAdapter(adapter);

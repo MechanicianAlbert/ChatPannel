@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ import com.albertech.inputdemo.R;
 import com.albertech.inputdemo.chatoperator.func.IFuncStatus;
 import com.albertech.inputdemo.chatoperator.func.emoji.EmojiFunc;
 import com.albertech.inputdemo.chatoperator.func.emoji.OnEmojiClickListener;
+import com.albertech.inputdemo.chatoperator.func.plus.OnPlusItemClickListener;
 import com.albertech.inputdemo.chatoperator.func.plus.PlusFunc;
 import com.albertech.inputdemo.chatoperator.func.voice.VoiceIFunc;
 
@@ -48,15 +50,26 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
         }
     };
 
-    private final OnEmojiClickListener EMOJI_WATCH = new OnEmojiClickListener() {
-        @Override
-        public void onEmojiClick(String code) {
+    private final OnEmojiClickListener EMOJI_WATCHER = new OnEmojiClickListener() {
 
+        @Override
+        public void onEmojiClick(int res, String code) {
+            Log.e("AAA", "Res: " + res + ", Code: " + code);
+            mEt.append(code);
         }
 
         @Override
         public void onBackspaceClick() {
+            Log.e("AAA", "Delete");
+            mEt.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+            mEt.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));
+        }
+    };
 
+    private final OnPlusItemClickListener PLUS_WATCHER = new OnPlusItemClickListener() {
+        @Override
+        public void onPlusItemClick(String name) {
+            Log.e("AAA", name);
         }
     };
 
@@ -101,8 +114,8 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
 
     @Override
     protected void onRegisterFunc(Set<IFunc> funcs) {
-        funcs.add(new EmojiFunc());
-        funcs.add(new PlusFunc());
+        funcs.add(EmojiFunc.newInstance(EMOJI_WATCHER));
+        funcs.add(PlusFunc.newInstance(PLUS_WATCHER));
         funcs.add(new VoiceIFunc());
     }
 

@@ -12,22 +12,30 @@ import java.util.List;
 
 public class PlusUtil implements PlusDefine {
 
-    public static List<View> createPlusPagers(Context context) {
+    public static List<View> createPlusPagers(Context context, OnPlusItemClickListener listener) {
         List<View> list = new ArrayList<>();
-        list.add(createSinglePlusPage(context, 0));
+        list.add(createSinglePlusPage(context, 0, listener));
         return list;
     }
 
 
-    private static View createSinglePlusPage(Context context, int pageIndex) {
+    private static View createSinglePlusPage(Context context, int pageIndex, OnPlusItemClickListener listener) {
         View page = View.inflate(context, R.layout.item_plus_page, null);
         RecyclerView rv = page.findViewById(R.id.rv_page_plus);
-        fillPageWithPlusData(rv, pageIndex);
+        fillPageWithPlusData(rv, pageIndex, listener);
         return page;
     }
 
-    private static void fillPageWithPlusData(RecyclerView rv, int pageIndex) {
-        PlusSinglePageAdapter adapter = new PlusSinglePageAdapter();
+    private static void fillPageWithPlusData(RecyclerView rv, int pageIndex, final OnPlusItemClickListener listener) {
+        PlusGroupAdapter adapter = new PlusGroupAdapter() {
+            @Override
+            public boolean onItemClick(int position, PlusBean plusBean) {
+                if (listener != null) {
+                    listener.onPlusItemClick(plusBean.getName());
+                }
+                return false;
+            }
+        };
         adapter.updateData(createPlusListWithPageIndex(pageIndex));
         rv.setLayoutManager(new GridLayoutManager(rv.getContext(), 4));
         rv.setAdapter(adapter);

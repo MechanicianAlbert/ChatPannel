@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public interface OnEmojiClickListener extends Serializable {
 
-    void onEmojiClick(String code);
+    void onEmojiClick(int res, String code);
 
     void onBackspaceClick();
 
