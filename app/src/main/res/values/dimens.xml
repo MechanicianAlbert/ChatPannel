@@ -7,6 +7,8 @@
     <dimen name="input_pannel_btn_send_height">30dp</dimen>
     <dimen name="input_pannel_container_default_size">40dp</dimen>
 
+    <dimen name="input_pannel_edit_text_size">20sp</dimen>
+
     <dimen name="input_pannel_emoji_icon_size">30dp</dimen>
     <dimen name="input_pannel_emoji_icon_margin_top">20dp</dimen>
 

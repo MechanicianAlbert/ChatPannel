@@ -7,14 +7,21 @@
     android:orientation="vertical"
     tools:context="com.albertech.inputdemo.MainActivity">
 
-    <ListView
-        android:id="@+id/lv"
+    <LinearLayout
+        android:id="@+id/ll"
         android:clickable="true"
+        android:orientation="vertical"
         android:focusable="true"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/colorAccent" />
+        android:background="@color/colorAccent" >
+
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
     <com.albertech.inputdemo.chatoperator.InputPannelView
         android:id="@+id/ipv"

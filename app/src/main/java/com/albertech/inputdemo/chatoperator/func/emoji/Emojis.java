@@ -247,10 +247,10 @@ interface Emojis {
 
     String[][] ALL_CODE = {
             PAGE_0_CODE,
-            PAGE_0_CODE,
-            PAGE_0_CODE,
-            PAGE_0_CODE,
-            PAGE_0_CODE
+            PAGE_1_CODE,
+            PAGE_2_CODE,
+            PAGE_3_CODE,
+            PAGE_4_CODE
     };
 
 }

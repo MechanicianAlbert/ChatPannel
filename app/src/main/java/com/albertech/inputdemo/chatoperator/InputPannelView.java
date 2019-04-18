@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -20,6 +21,7 @@ import com.albertech.editpanel.kernal.IpMgrBuilder;
 import com.albertech.inputdemo.R;
 import com.albertech.inputdemo.chatoperator.func.IFuncStatus;
 import com.albertech.inputdemo.chatoperator.func.emoji.EmojiFunc;
+import com.albertech.inputdemo.chatoperator.func.emoji.EmojiUtil;
 import com.albertech.inputdemo.chatoperator.func.emoji.OnEmojiClickListener;
 import com.albertech.inputdemo.chatoperator.func.plus.OnPlusItemClickListener;
 import com.albertech.inputdemo.chatoperator.func.plus.PlusFunc;
@@ -54,13 +56,28 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
 
         @Override
         public void onEmojiClick(int res, String code) {
-            Log.e("AAA", "Res: " + res + ", Code: " + code);
-            mEt.append(code);
+            Log.e("AAA", "Emoji info: Res=" + res + ", Code=" + code);
+            SpannableString ss = EmojiUtil.decorateTextByEmoji(getContext(), code);
+
+            int start = mEt.getSelectionStart();
+            int end = mEt.getSelectionEnd();
+            int newSelection = start + ss.length();
+            Editable newText = mEt.getText().replace(start, end, ss);
+
+            Log.e("AAA", "Text update info:"
+                    + "\nSelection start: " + start
+                    + "\nSelection end: " + end
+                    + "\nNew selection: " + newSelection
+                    + "\nNew text: " + newText
+            );
+
+            mEt.setText(newText);
+            mEt.setSelection(newSelection);
         }
 
         @Override
         public void onBackspaceClick() {
-            Log.e("AAA", "Delete");
+            Log.e("AAA", "Delete Emoji");
             mEt.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
             mEt.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));
         }
@@ -73,6 +90,18 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
         }
     };
 
+    private final OnClickListener TEXT_SUBMITTER = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mOnTextSubmitListener != null) {
+                mOnTextSubmitListener.onTextSubmit(mEt.getText());
+                mEt.setText("");
+            }
+        }
+    };
+
+
+    private OnTextSubmitListener mOnTextSubmitListener;
 
     private EditText mEt;
     private View mBtnTalk;
@@ -128,7 +157,9 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
     @Override
     public void onFuncActivate(int status) {
         Log.e("InputPannel", IFuncStatus.Helper.name(status));
-        if (status == IFuncStatus.FUNC_INPUT) {
+        if (status == IFuncStatus.FUNC_HIDE) {
+            toggleEditOrVoice(true);
+        } else if (status == IFuncStatus.FUNC_INPUT) {
             toggleEditOrVoice(true);
         } else if (status == IFuncStatus.FUNC_VOICE) {
             toggleEditOrVoice(false);
@@ -140,6 +171,10 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
     }
 
 
+    public void setOnTextSubmitListener(OnTextSubmitListener listener) {
+        mOnTextSubmitListener = listener;
+    }
+
     private void initView(View rootView) {
         mEt = rootView.findViewById(R.id.et);
         mBtnTalk = rootView.findViewById(R.id.btn_talk);
@@ -149,6 +184,7 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
 
     private void initListener() {
         mEt.addTextChangedListener(TEXT_WATCHER);
+        mBtnSend.setOnClickListener(TEXT_SUBMITTER);
     }
 
     private void toggleEditOrVoice(boolean showEdit) {
