@@ -190,6 +190,7 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
     private void toggleEditOrVoice(boolean showEdit) {
         ViewGroup.LayoutParams editLp = mEt.getLayoutParams();
         editLp.width = showEdit ? ViewGroup.LayoutParams.MATCH_PARENT : 0;
+        editLp.height = showEdit ? ViewGroup.LayoutParams.WRAP_CONTENT : 0;
         mEt.setLayoutParams(editLp);
         ViewGroup.LayoutParams voiceLp = mBtnTalk.getLayoutParams();
         voiceLp.width = showEdit ? 0 : ViewGroup.LayoutParams.MATCH_PARENT;
