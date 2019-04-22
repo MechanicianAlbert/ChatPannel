@@ -1,5 +1,6 @@
 package com.albertech.inputdemo.chatoperator;
 
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,14 +26,25 @@ import com.albertech.inputdemo.chatoperator.func.emoji.EmojiUtil;
 import com.albertech.inputdemo.chatoperator.func.emoji.OnEmojiClickListener;
 import com.albertech.inputdemo.chatoperator.func.plus.OnPlusItemClickListener;
 import com.albertech.inputdemo.chatoperator.func.plus.PlusFunc;
+import com.albertech.inputdemo.chatoperator.func.voice.VoicePresenterImpl;
 import com.albertech.inputdemo.chatoperator.func.voice.VoiceIFunc;
+import com.albertech.inputdemo.chatoperator.func.voice.IVoiceMsgContract;
 
 import java.util.Set;
 
 
 
-
 public class InputPannelView extends AbsIpView implements IFuncStatus {
+
+
+    private final IVoiceMsgContract.IVoicePresenter VOICE_PRESENTER = new VoicePresenterImpl(getContext()) {
+        @Override
+        public void sendVoiceMsg(String filePath) {
+            if (mMsgSender != null) {
+                mMsgSender.onVoiceSubmit(filePath);
+            }
+        }
+    };
 
     private final TextWatcher TEXT_WATCHER = new TextWatcher() {
 
@@ -93,15 +105,15 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
     private final OnClickListener TEXT_SUBMITTER = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (mOnTextSubmitListener != null) {
-                mOnTextSubmitListener.onTextSubmit(mEt.getText());
+            if (mMsgSender != null) {
+                mMsgSender.onTextSubmit(mEt.getText());
                 mEt.setText("");
             }
         }
     };
 
 
-    private OnTextSubmitListener mOnTextSubmitListener;
+    private IMsgSender mMsgSender;
 
     private EditText mEt;
     private View mBtnTalk;
@@ -121,6 +133,12 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
         super(context, attrs, defStyleAttr);
     }
 
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        VOICE_PRESENTER.releaseView();
+    }
 
     @Override
     protected int layoutRes() {
@@ -171,8 +189,8 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
     }
 
 
-    public void setOnTextSubmitListener(OnTextSubmitListener listener) {
-        mOnTextSubmitListener = listener;
+    public void setMsgSender(IMsgSender msgSender) {
+        mMsgSender = msgSender;
     }
 
     private void initView(View rootView) {
@@ -183,6 +201,7 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
     }
 
     private void initListener() {
+        VOICE_PRESENTER.bindView(mBtnTalk);
         mEt.addTextChangedListener(TEXT_WATCHER);
         mBtnSend.setOnClickListener(TEXT_SUBMITTER);
     }

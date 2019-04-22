@@ -42,7 +42,7 @@
                 android:layout_gravity="center_horizontal|bottom"
                 android:background="@drawable/shape_ip_btn_talk"
                 android:gravity="center"
-                android:text="@string/str_btn_press_to_talk" />
+                android:text="@string/str_hint_press_to_talk" />
         </FrameLayout>
 
         <View

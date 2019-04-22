@@ -2,7 +2,12 @@ package com.albertech.inputdemo.chatoperator;
 
 import android.text.Editable;
 
-public interface OnTextSubmitListener {
+public interface IMsgSender {
 
     void onTextSubmit(Editable text);
+
+    void onVoiceSubmit(String path);
+
+    void onImageSubmit(String... paths);
+
 }

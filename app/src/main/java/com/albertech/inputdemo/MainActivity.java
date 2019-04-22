@@ -3,12 +3,12 @@ package com.albertech.inputdemo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.view.MotionEvent;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.albertech.inputdemo.chatoperator.InputPannelView;
-import com.albertech.inputdemo.chatoperator.OnTextSubmitListener;
+import com.albertech.inputdemo.chatoperator.IMsgSender;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -41,12 +41,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ipv.setOnTextSubmitListener(new OnTextSubmitListener() {
+        ipv.setMsgSender(new IMsgSender() {
             @Override
             public void onTextSubmit(Editable text) {
                 tv.setText(text);
             }
+
+            @Override
+            public void onVoiceSubmit(String path) {
+                Log.e("AAA", path);
+            }
+
+            @Override
+            public void onImageSubmit(String... paths) {
+
+            }
         });
+
     }
 
 
