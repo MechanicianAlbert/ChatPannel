@@ -37,14 +37,7 @@ import java.util.Set;
 public class InputPannelView extends AbsIpView implements IFuncStatus {
 
 
-    private final IVoiceMsgContract.IVoicePresenter VOICE_PRESENTER = new VoicePresenterImpl(getContext()) {
-        @Override
-        public void sendVoiceMsg(String filePath) {
-            if (mMsgSender != null) {
-                mMsgSender.onVoiceSubmit(filePath);
-            }
-        }
-    };
+    private final IVoiceMsgContract.IVoicePresenter VOICE_PRESENTER = new VoicePresenterImpl(getContext());
 
     private final TextWatcher TEXT_WATCHER = new TextWatcher() {
 
@@ -191,6 +184,7 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
 
     public void setMsgSender(IMsgSender msgSender) {
         mMsgSender = msgSender;
+        VOICE_PRESENTER.setVoiceHandler(msgSender);
     }
 
     private void initView(View rootView) {

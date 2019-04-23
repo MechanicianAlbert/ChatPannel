@@ -17,4 +17,8 @@ public interface PlusDefine {
             "位置",
             "语音输入"
     };
+
+    int[][] ALL_RES = {PAGE_0_RES};
+
+    String[][] ALL_NAME = {PAGE_0_NAME};
 }

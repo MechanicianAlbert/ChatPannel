@@ -10,6 +10,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.albertech.inputdemo.R;
@@ -96,6 +97,8 @@ public class VoicePresenterImpl extends Handler implements IVoiceMsgContract.IVo
 
     private View mBtn;
 
+    private IVoiceMsgContract.IVoiceHandler mVoiceHandler;
+
 
     public VoicePresenterImpl(Context context) {
         // 在构造中获得主线程
@@ -159,7 +162,9 @@ public class VoicePresenterImpl extends Handler implements IVoiceMsgContract.IVo
             new File(mRecordPath).delete();
         } else {
             if (mRecordDuration > 1) {
-                sendVoiceMsg(mRecordPath);
+                if (mVoiceHandler != null) {
+                    mVoiceHandler.onVoiceSubmit(mRecordPath);
+                }
             } else {
                 Toast.makeText(mContext, R.string.str_toast_too_short, Toast.LENGTH_SHORT).show();
             }
@@ -185,6 +190,7 @@ public class VoicePresenterImpl extends Handler implements IVoiceMsgContract.IVo
             mBtn = null;
         }
         MODEL.release();
+        mVoiceHandler = null;
         // 停止监听通话状态
 //        ((TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE))
 //                .listen(PHONE_WATCHER, PhoneStateListener.LISTEN_NONE);
@@ -192,8 +198,8 @@ public class VoicePresenterImpl extends Handler implements IVoiceMsgContract.IVo
     }
 
     @Override
-    public void sendVoiceMsg(String filePath) {
-
+    public void setVoiceHandler(IVoiceMsgContract.IVoiceHandler voiceHandler) {
+        mVoiceHandler = voiceHandler;
     }
 
     @Override
@@ -214,24 +220,40 @@ public class VoicePresenterImpl extends Handler implements IVoiceMsgContract.IVo
     public void onMovedIntoLimitArea(MotionEvent event) {
         // 通知浮窗触点在底部
         POP.onTouchPositiveArea();
+        // 通知按钮触点在底部
+        if (mBtn instanceof TextView) {
+            ((TextView) mBtn).setText(R.string.str_hint_release_to_end);
+        }
     }
 
     @Override
     public void onMovedOutOfLimitArea(MotionEvent event) {
         // 通知浮窗触点在上部
         POP.onTouchNegativeArea();
+        // 通知按钮触点在上部
+        if (mBtn instanceof TextView) {
+            ((TextView) mBtn).setText(R.string.str_hint_release_to_cancel);
+        }
     }
 
     @Override
     public void onReleasedFromLimitArea(MotionEvent event) {
         // 停止录音并丢弃录制内容
         stopRecord(false);
+        // 重置按钮显示状态
+        if (mBtn instanceof TextView) {
+            ((TextView) mBtn).setText(R.string.str_hint_press_to_talk);
+        }
     }
 
     @Override
     public void onReleasedOutOfLimitArea(MotionEvent event) {
         // 停止录音并发送录制内容
         stopRecord(true);
+        // 重置按钮显示状态
+        if (mBtn instanceof TextView) {
+            ((TextView) mBtn).setText(R.string.str_hint_press_to_talk);
+        }
     }
 
 }

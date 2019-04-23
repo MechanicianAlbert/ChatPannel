@@ -42,12 +42,7 @@ public class PlusUtil implements PlusDefine {
     }
 
     private static List<PlusBean> createPlusListWithPageIndex(int pageIndex) {
-        switch (pageIndex) {
-            case 0:
-                return createPlusBeanList(PAGE_0_RES, PAGE_0_NAME);
-            default:
-                return new ArrayList<>();
-        }
+        return createPlusBeanList(ALL_RES[pageIndex], ALL_NAME[pageIndex]);
     }
 
     private static List<PlusBean> createPlusBeanList(int[] resArr, String[] nameArr) {

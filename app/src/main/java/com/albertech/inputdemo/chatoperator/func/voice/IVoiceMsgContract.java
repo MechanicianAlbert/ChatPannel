@@ -18,6 +18,18 @@ public interface IVoiceMsgContract {
     }
 
     /**
+     * 处理录音文件回调接口
+     */
+    interface IVoiceHandler {
+
+        /**
+         * 处理录音文件回调方法
+         * @param path 录音文件路径
+         */
+        void onVoiceSubmit(String path);
+    }
+
+    /**
      * 最大录制时长
      */
     int MAX_DURATION = 60;
@@ -129,10 +141,10 @@ public interface IVoiceMsgContract {
         void releaseView();
 
         /**
-         * 发送短语音消息
-         * @param filePath
+         * 设置录音文件处理接口
+         * @param voiceHandler 录音文件处理接口
          */
-        void sendVoiceMsg(String filePath);
+        void setVoiceHandler(IVoiceHandler voiceHandler);
 
     }
 
