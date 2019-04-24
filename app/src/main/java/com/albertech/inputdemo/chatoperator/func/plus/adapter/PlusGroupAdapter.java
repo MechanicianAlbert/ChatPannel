@@ -1,9 +1,10 @@
-package com.albertech.inputdemo.chatoperator.func.plus;
+package com.albertech.inputdemo.chatoperator.func.plus.adapter;
 
 import android.view.View;
 
 import com.albertech.inputdemo.R;
 import com.albertech.inputdemo.base.BaseRecyclerAdapter;
+import com.albertech.inputdemo.chatoperator.func.plus.bean.PlusBean;
 
 
 public class PlusGroupAdapter extends BaseRecyclerAdapter<PlusHolder, PlusBean> {

@@ -113,11 +113,6 @@ public interface IVoiceMsgContract {
     interface IVoicePresenter extends BtnTouchTransformer.Listener {
 
         /**
-         * 默认输出位置相对路径, 父路径为 SDCard
-         */
-        String RECORD_FILE_PARENT_RELATIVE_PATH = "AAA";
-
-        /**
          * 录音所需的权限
          */
         String[] PERMISSIONS = {

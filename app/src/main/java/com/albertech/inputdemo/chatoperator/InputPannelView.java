@@ -21,23 +21,30 @@ import com.albertech.editpanel.kernal.AbsIpView;
 import com.albertech.editpanel.kernal.IpMgrBuilder;
 import com.albertech.inputdemo.R;
 import com.albertech.inputdemo.chatoperator.func.IFuncStatus;
-import com.albertech.inputdemo.chatoperator.func.emoji.api.impl.DefaultEmojiConfig;
 import com.albertech.inputdemo.chatoperator.func.emoji.EmojiFunc;
 import com.albertech.inputdemo.chatoperator.func.emoji.api.OnEmojiClickListener;
-import com.albertech.inputdemo.chatoperator.func.plus.OnPlusItemClickListener;
+import com.albertech.inputdemo.chatoperator.func.emoji.api.impl.DefaultEmojiConfig;
 import com.albertech.inputdemo.chatoperator.func.plus.PlusFunc;
-import com.albertech.inputdemo.chatoperator.func.voice.VoicePresenterImpl;
-import com.albertech.inputdemo.chatoperator.func.voice.VoiceIFunc;
+import com.albertech.inputdemo.chatoperator.func.plus.api.OnPlusItemClickListener;
+import com.albertech.inputdemo.chatoperator.func.plus.api.impl.DefaultPlusConfig;
 import com.albertech.inputdemo.chatoperator.func.voice.IVoiceMsgContract;
+import com.albertech.inputdemo.chatoperator.func.voice.VoiceIFunc;
+import com.albertech.inputdemo.chatoperator.func.voice.VoicePresenterImpl;
 
 import java.util.Set;
 
-
-
+/**
+ * 聊天输入面板 View 的实现类
+ * 具备短语音, 表情, 加号等默认功能
+ * 可继承此类进行扩展或替换默认实现
+ */
 public class InputPannelView extends AbsIpView implements IFuncStatus {
 
 
-    private final IVoiceMsgContract.IVoicePresenter VOICE_PRESENTER = new VoicePresenterImpl(getContext());
+    private final IVoiceMsgContract.IVoicePresenter VOICE_PRESENTER = new VoicePresenterImpl(
+            getContext(),
+            getVoiceRecordFilePath()
+    );
 
     private final TextWatcher TEXT_WATCHER = new TextWatcher() {
 
@@ -111,6 +118,8 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
     private View mBtnPlus;
     private View mBtnSend;
 
+    private int mCurrentStatus;
+
 
     public InputPannelView(@NonNull Context context) {
         super(context);
@@ -130,6 +139,7 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
         super.onDetachedFromWindow();
         VOICE_PRESENTER.releaseView();
     }
+
 
     @Override
     protected int layoutRes() {
@@ -152,14 +162,18 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
 
     @Override
     protected void onRegisterFunc(Set<IFunc> funcs) {
-//        funcs.add(EmojiFunc.newInstance(EMOJI_WATCHER));
         funcs.add(EmojiFunc.newInstance(new DefaultEmojiConfig() {
             @Override
             public OnEmojiClickListener getOnEmojiClickListener() {
                 return EMOJI_WATCHER;
             }
         }));
-        funcs.add(PlusFunc.newInstance(PLUS_WATCHER));
+        funcs.add(PlusFunc.newInstance(new DefaultPlusConfig() {
+            @Override
+            public OnPlusItemClickListener getOnPlusItemClickListener() {
+                return PLUS_WATCHER;
+            }
+        }));
         funcs.add(new VoiceIFunc());
     }
 
@@ -172,6 +186,7 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
     @Override
     public void onFuncActivate(int status) {
         Log.e("InputPannel", IFuncStatus.Helper.name(status));
+        mCurrentStatus = status;
         if (status == IFuncStatus.FUNC_HIDE) {
             toggleEditOrVoice(true);
         } else if (status == IFuncStatus.FUNC_INPUT) {
@@ -185,11 +200,32 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
         }
     }
 
+    @Override
+    public void hide() {
+        // 由于 VOICE 状态没有功能面版, 与 HIDE 状态等高, 故拦截 hide() 方法, 使点击外部时, 保持 VOICE 状态
+        if (mCurrentStatus != IFuncStatus.FUNC_VOICE) {
+            super.hide();
+        }
+    }
 
-    public void setMsgSender(IMsgSender msgSender) {
+    /**
+     * 为消息发送接口设置实现
+     * @param msgSender 外部发送消息接口的实现, 用于接收输入面板提交的文字/图片/短语音消息并发送
+     */
+    public final void setMsgSender(IMsgSender msgSender) {
         mMsgSender = msgSender;
         VOICE_PRESENTER.setVoiceHandler(msgSender);
     }
+
+
+    /**
+     * 为短语音消息录音文件设置存储路径
+     * @return 录音文件存储位置的相对路径, 其父路径为系统 SDCard 路径
+     */
+    protected String getVoiceRecordFilePath() {
+        return "AAA";
+    }
+
 
     private void initView(View rootView) {
         mEt = rootView.findViewById(R.id.et);

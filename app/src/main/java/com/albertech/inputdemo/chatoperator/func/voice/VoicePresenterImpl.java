@@ -73,10 +73,20 @@ public class VoicePresenterImpl extends Handler implements IVoiceMsgContract.IVo
         }
     };
 
+    /**
+     * 录音引擎
+     */
     private final IVoiceMsgContract.IVoiceModel MODEL = new VoiceModelImpl();
 
-
+    /**
+     * 录音提示悬浮窗
+     */
     private final VoiceViewPop POP;
+
+    /**
+     * 默认输出位置相对路径, 父路径为 SDCard
+     */
+    private final String RECORD_FILE_PARENT_RELATIVE_PATH;
 
     /**
      * 录音文件路径
@@ -100,10 +110,11 @@ public class VoicePresenterImpl extends Handler implements IVoiceMsgContract.IVo
     private IVoiceMsgContract.IVoiceHandler mVoiceHandler;
 
 
-    public VoicePresenterImpl(Context context) {
+    public VoicePresenterImpl(Context context, String path) {
         // 在构造中获得主线程
         super(Looper.getMainLooper());
         mContext = context;
+        RECORD_FILE_PARENT_RELATIVE_PATH = path;
         POP = new VoiceViewPop(mContext);
         MODEL.init();
     }
@@ -159,7 +170,12 @@ public class VoicePresenterImpl extends Handler implements IVoiceMsgContract.IVo
         POP.onRecordStop();
         if (dropRecord) {
             // 删除丢弃的录制文件
-            new File(mRecordPath).delete();
+            if (mRecordPath != null) {
+                File f = new File(mRecordPath);
+                if (f != null && f.exists()) {
+                    f.delete();
+                }
+            }
         } else {
             if (mRecordDuration > 1) {
                 if (mVoiceHandler != null) {

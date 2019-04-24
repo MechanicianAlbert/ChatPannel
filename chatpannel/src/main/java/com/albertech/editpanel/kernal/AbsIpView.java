@@ -73,7 +73,7 @@ public abstract class AbsIpView extends FrameLayout implements IpFuncMgrImpl.OnF
     }
 
 
-    public final void hide() {
+    public void hide() {
         if (mIPFM != null) {
             mIPFM.hide();
         }

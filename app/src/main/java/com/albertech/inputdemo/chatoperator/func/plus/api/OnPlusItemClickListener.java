@@ -1,4 +1,4 @@
-package com.albertech.inputdemo.chatoperator.func.plus;
+package com.albertech.inputdemo.chatoperator.func.plus.api;
 
 
 public interface OnPlusItemClickListener {

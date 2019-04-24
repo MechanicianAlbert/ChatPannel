@@ -1,8 +1,8 @@
-package com.albertech.inputdemo.chatoperator.func.plus;
+package com.albertech.inputdemo.chatoperator.func.plus.api.impl;
 
 import com.albertech.inputdemo.R;
 
-public interface PlusDefine {
+public interface DefaultPlusConstant {
 
     int[] PAGE_0_RES = {
             R.drawable.ic_launcher,

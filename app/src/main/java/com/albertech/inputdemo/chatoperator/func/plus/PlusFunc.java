@@ -6,12 +6,18 @@ import android.view.View;
 
 import com.albertech.inputdemo.R;
 import com.albertech.inputdemo.base.BasePagerAdapter;
+import com.albertech.inputdemo.chatoperator.func.plus.api.IPlusConfig;
+import com.albertech.inputdemo.chatoperator.func.plus.api.OnPlusItemClickListener;
 import com.albertech.inputdemo.chatoperator.view.PagerDotIndicator;
 
 
 public class PlusFunc extends PlusFuncFragment {
 
-    private OnPlusItemClickListener mListener;
+    private PlusManager mManager;
+    private final BasePagerAdapter<View> ADAPTER = new BasePagerAdapter<>();
+
+
+//    private OnPlusItemClickListener mListener;
 
     private ViewPager mVpPlus;
     private PagerDotIndicator mIndicator;
@@ -19,7 +25,13 @@ public class PlusFunc extends PlusFuncFragment {
 
     public static PlusFunc newInstance(OnPlusItemClickListener listener) {
         PlusFunc pf = new PlusFunc();
-        pf.mListener = listener;
+//        pf.mListener = listener;
+        return pf;
+    }
+
+    public static PlusFunc newInstance(IPlusConfig config) {
+        PlusFunc pf = new PlusFunc();
+        pf.mManager = new PlusManager(config);
         return pf;
     }
 
@@ -37,10 +49,9 @@ public class PlusFunc extends PlusFuncFragment {
 
     @Override
     protected void initData() {
-        BasePagerAdapter<View> adapter = new BasePagerAdapter<>();
-        adapter.updatePagers(PlusUtil.createPlusPagers(getContext(), mListener));
-        mVpPlus.setAdapter(adapter);
+        ADAPTER.updatePagers(mManager.creatPlusPagers(getContext()));
+        mVpPlus.setAdapter(ADAPTER);
         mIndicator.setUpWithViewPager(mVpPlus);
-        mIndicator.setVisibility(adapter.getCount() < 2 ? View.GONE : View.VISIBLE);
+        mIndicator.setVisibility(ADAPTER.getCount() < 2 ? View.GONE : View.VISIBLE);
     }
 }

@@ -50,18 +50,18 @@ class EmojiManager {
         }
         int [][] emojiRes = config.getEmojiRes();
         if (emojiRes == null) {
-            throw new NullPointerException("Emoji res should not be null");
+            throw new NullPointerException("Emoji RES should not be null");
         }
         String[][] emojiCode = config.getEmojiCode();
         if (emojiCode == null) {
             throw new NullPointerException("Emoji code should not be null");
         }
         if (emojiRes.length != emojiCode.length) {
-            throw new IllegalArgumentException("The page count of code and res should be equal");
+            throw new IllegalArgumentException("The page count of code and RES should be equal");
         }
         for (int i = 0; i < emojiRes.length; i++) {
             if (emojiRes[i].length != emojiCode[i].length) {
-                throw new IllegalArgumentException("The emoji count in one page of code and res should be equal");
+                throw new IllegalArgumentException("The emoji count in one page of code and RES should be equal");
             }
         }
         if (config.getEmojiPattern() == null) {
