@@ -6,20 +6,24 @@ import android.view.View;
 
 import com.albertech.inputdemo.R;
 import com.albertech.inputdemo.base.BasePagerAdapter;
+import com.albertech.inputdemo.chatoperator.func.emoji.api.IEmojiConfig;
 import com.albertech.inputdemo.chatoperator.view.PagerDotIndicator;
 
 
 public class EmojiFunc extends EmojiFuncFragment {
 
-    private OnEmojiClickListener mListener;
+    private final BasePagerAdapter<View> ADAPTER = new BasePagerAdapter<>();
+
+
+    private EmojiManager mEmojiManager;
 
     private ViewPager mVpEmoji;
     private PagerDotIndicator mIndicator;
 
 
-    public static EmojiFunc newInstance(OnEmojiClickListener listener) {
+    public static EmojiFunc newInstance(IEmojiConfig config) {
         EmojiFunc ef = new EmojiFunc();
-        ef.mListener = listener;
+        ef.mEmojiManager = new EmojiManager(config);
         return ef;
     }
 
@@ -37,9 +41,8 @@ public class EmojiFunc extends EmojiFuncFragment {
 
     @Override
     protected void initData() {
-        BasePagerAdapter<View> adapter = new BasePagerAdapter<>();
-        adapter.updatePagers(EmojiUtil.creatEmojiPagers(getContext(), mListener));
-        mVpEmoji.setAdapter(adapter);
+        ADAPTER.updatePagers(mEmojiManager.creatEmojiPagers(getContext()));
+        mVpEmoji.setAdapter(ADAPTER);
         mIndicator.setUpWithViewPager(mVpEmoji);
     }
 

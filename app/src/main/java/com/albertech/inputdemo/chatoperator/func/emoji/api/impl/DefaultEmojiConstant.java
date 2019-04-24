@@ -1,9 +1,27 @@
-package com.albertech.inputdemo.chatoperator.func.emoji;
+package com.albertech.inputdemo.chatoperator.func.emoji.api.impl;
 
 import com.albertech.inputdemo.R;
 
 
-interface Emojis {
+interface DefaultEmojiConstant {
+
+    class EmojiPatternBuilder {
+
+        private static String buildEmojiPattern() {
+            StringBuffer sb = new StringBuffer("");
+            for (int page = 0; page < ALL_CODE.length; page++) {
+                for (int index = 0; index < ALL_CODE[page].length; index++) {
+                    sb.append(ALL_CODE[page][index]);
+                }
+            }
+            return sb.toString()
+                    .replace("[", "|(\\[")
+                    .replace("]", "\\])")
+                    .replace("<s", "|(<s")
+                    .replace("n>", "n>)")
+                    .substring(1);
+        }
+    }
 
     int[] PAGE_0_RES = {
             R.drawable.emoji_00,
@@ -252,5 +270,7 @@ interface Emojis {
             PAGE_3_CODE,
             PAGE_4_CODE
     };
+
+    String EMOJI_PATTERN = EmojiPatternBuilder.buildEmojiPattern();
 
 }

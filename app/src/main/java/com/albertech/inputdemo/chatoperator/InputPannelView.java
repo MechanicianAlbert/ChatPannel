@@ -21,9 +21,9 @@ import com.albertech.editpanel.kernal.AbsIpView;
 import com.albertech.editpanel.kernal.IpMgrBuilder;
 import com.albertech.inputdemo.R;
 import com.albertech.inputdemo.chatoperator.func.IFuncStatus;
+import com.albertech.inputdemo.chatoperator.func.emoji.api.impl.DefaultEmojiConfig;
 import com.albertech.inputdemo.chatoperator.func.emoji.EmojiFunc;
-import com.albertech.inputdemo.chatoperator.func.emoji.EmojiUtil;
-import com.albertech.inputdemo.chatoperator.func.emoji.OnEmojiClickListener;
+import com.albertech.inputdemo.chatoperator.func.emoji.api.OnEmojiClickListener;
 import com.albertech.inputdemo.chatoperator.func.plus.OnPlusItemClickListener;
 import com.albertech.inputdemo.chatoperator.func.plus.PlusFunc;
 import com.albertech.inputdemo.chatoperator.func.voice.VoicePresenterImpl;
@@ -60,14 +60,12 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
     private final OnEmojiClickListener EMOJI_WATCHER = new OnEmojiClickListener() {
 
         @Override
-        public void onEmojiClick(int res, String code) {
+        public void onEmojiClick(SpannableString emoji, int res, String code) {
             Log.e("AAA", "Emoji info: Res=" + res + ", Code=" + code);
-            SpannableString ss = EmojiUtil.decorateTextByEmoji(getContext(), code);
-
             int start = mEt.getSelectionStart();
             int end = mEt.getSelectionEnd();
-            int newSelection = start + ss.length();
-            Editable newText = mEt.getText().replace(start, end, ss);
+            int newSelection = start + emoji.length();
+            Editable newText = mEt.getText().replace(start, end, emoji);
 
             Log.e("AAA", "Text update info:"
                     + "\nSelection start: " + start
@@ -154,7 +152,13 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
 
     @Override
     protected void onRegisterFunc(Set<IFunc> funcs) {
-        funcs.add(EmojiFunc.newInstance(EMOJI_WATCHER));
+//        funcs.add(EmojiFunc.newInstance(EMOJI_WATCHER));
+        funcs.add(EmojiFunc.newInstance(new DefaultEmojiConfig() {
+            @Override
+            public OnEmojiClickListener getOnEmojiClickListener() {
+                return EMOJI_WATCHER;
+            }
+        }));
         funcs.add(PlusFunc.newInstance(PLUS_WATCHER));
         funcs.add(new VoiceIFunc());
     }
