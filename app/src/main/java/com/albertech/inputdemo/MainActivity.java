@@ -1,14 +1,9 @@
 package com.albertech.inputdemo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
-
-import com.albertech.inputdemo.chatoperator.InputPannelView;
-import com.albertech.inputdemo.chatoperator.IMsgSender;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -22,42 +17,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        final InputPannelView ipv = findViewById(R.id.ipv);
-        final TextView tv = findViewById(R.id.tv);
-//        View view = findViewById(R.id.ll);
-//        view.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//                    ipv.hide();
-//                }
-//                return false;
-//            }
-//        });
-        findViewById(R.id.ll).setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener l = new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                ipv.hide();
+            public void onClick(View view) {
+                if (view.getId() == R.id.btn_def) {
+                    to(DefInputPannelActivity.class);
+                } else if (view.getId() == R.id.btn_cus) {
+                    to(CusInputPannelActivity.class);
+                }
             }
-        });
+        };
+        findViewById(R.id.btn_def).setOnClickListener(l);
+        findViewById(R.id.btn_cus).setOnClickListener(l);
+    }
 
-        ipv.setMsgSender(new IMsgSender() {
-            @Override
-            public void onTextSubmit(Editable text) {
-                tv.setText(text);
-            }
-
-            @Override
-            public void onVoiceSubmit(String path) {
-                Log.e("AAA", path);
-            }
-
-            @Override
-            public void onImageSubmit(String... paths) {
-
-            }
-        });
-
+    private void to(Class<? extends AppCompatActivity> c) {
+        startActivity(new Intent(getApplicationContext(), c));
     }
 
 
