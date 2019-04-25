@@ -7,7 +7,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
-        versionName "1.0"
+        versionName "0.0.1"
     }
 
     buildTypes {
@@ -21,13 +21,16 @@ android {
 dependencies {
     // local
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    api project(':chatpannel')
+//    api project(':chatpannel')
     // support
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     // third-party
 //    implementation 'com.albertech.chatpannel:chatpannel:1.0'
     api 'com.albertech.common:common:0.0.1'
+    api 'com.albertech.chatpannel:chatpannel:0.0.1'
 }
+
+apply from: 'maven.gradle'
 
 
