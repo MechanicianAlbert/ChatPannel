@@ -4,9 +4,9 @@ package com.albertech.easypannel.func.emoji.adapter;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.albertech.common.base.recycler.normal.BaseRecyclerAdapter;
+import com.albertech.common.base.recycler.normal.BaseHolder;
 import com.albertech.easypannel.R;
-import com.albertech.easypannel.base.BaseHolder;
-import com.albertech.easypannel.base.BaseRecyclerAdapter;
 import com.albertech.easypannel.func.emoji.bean.EmojiBean;
 
 

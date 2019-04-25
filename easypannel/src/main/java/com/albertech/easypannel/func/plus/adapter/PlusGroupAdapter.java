@@ -2,8 +2,8 @@ package com.albertech.easypannel.func.plus.adapter;
 
 import android.view.View;
 
+import com.albertech.common.base.recycler.normal.BaseRecyclerAdapter;
 import com.albertech.easypannel.R;
-import com.albertech.easypannel.base.BaseRecyclerAdapter;
 import com.albertech.easypannel.func.plus.bean.PlusBean;
 
 

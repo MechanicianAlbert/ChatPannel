@@ -4,8 +4,8 @@ package com.albertech.easypannel.func.plus;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
+import com.albertech.common.base.pager.BasePagerAdapter;
 import com.albertech.easypannel.R;
-import com.albertech.easypannel.base.BasePagerAdapter;
 import com.albertech.easypannel.func.plus.api.IPlusConfig;
 import com.albertech.easypannel.view.PagerDotIndicator;
 

@@ -2,9 +2,9 @@ package com.albertech.easypannel.func.emoji;
 
 import android.support.v4.app.Fragment;
 
+import com.albertech.common.base.fragment.BaseFragment;
 import com.albertech.editpanel.base.IFunc;
 import com.albertech.easypannel.R;
-import com.albertech.easypannel.base.BaseFragment;
 import com.albertech.easypannel.func.IFuncStatus;
 
 

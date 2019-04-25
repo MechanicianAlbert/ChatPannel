@@ -27,6 +27,7 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     // third-party
 //    implementation 'com.albertech.chatpannel:chatpannel:1.0'
+    api 'com.albertech.common:common:0.0.1'
 }
 
 
