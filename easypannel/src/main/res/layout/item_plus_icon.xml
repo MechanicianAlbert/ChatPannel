@@ -6,11 +6,19 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/iv_plus"
-        android:layout_width="@dimen/input_pannel_plus_icon_size"
-        android:layout_height="@dimen/input_pannel_plus_icon_size"
-        android:layout_gravity="center" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/input_pannel_plus_icon_margin"
+        android:background="@drawable/shape_cornered_rect_item_plus"
+        android:padding="@dimen/input_pannel_padding">
+
+        <ImageView
+            android:id="@+id/iv_plus"
+            android:layout_width="@dimen/input_pannel_plus_icon_size"
+            android:layout_height="@dimen/input_pannel_plus_icon_size"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/tv_plus"

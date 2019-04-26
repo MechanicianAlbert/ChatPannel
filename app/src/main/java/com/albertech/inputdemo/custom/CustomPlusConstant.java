@@ -3,17 +3,17 @@ package com.albertech.inputdemo.custom;
 public interface CustomPlusConstant {
 
     int[] PAGE_0_RES = {
-            com.albertech.easypannel.R.drawable.ic_launcher,
-            com.albertech.easypannel.R.drawable.ic_launcher,
-            com.albertech.easypannel.R.drawable.ic_launcher,
-            com.albertech.easypannel.R.drawable.ic_launcher
+            com.albertech.easypannel.R.drawable.ip_plus_album,
+            com.albertech.easypannel.R.drawable.ip_plus_camera,
+            com.albertech.easypannel.R.drawable.ip_plus_location,
+            com.albertech.easypannel.R.drawable.ip_plus_stt
     };
 
     int[] PAGE_1_RES = {
-            com.albertech.easypannel.R.drawable.ic_launcher,
-            com.albertech.easypannel.R.drawable.ic_launcher,
-            com.albertech.easypannel.R.drawable.ic_launcher,
-            com.albertech.easypannel.R.drawable.ic_launcher
+            com.albertech.easypannel.R.drawable.ip_plus_album,
+            com.albertech.easypannel.R.drawable.ip_plus_camera,
+            com.albertech.easypannel.R.drawable.ip_plus_location,
+            com.albertech.easypannel.R.drawable.ip_plus_stt
     };
 
 

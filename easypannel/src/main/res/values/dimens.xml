@@ -12,11 +12,15 @@
     <dimen name="input_pannel_emoji_icon_size">30dp</dimen>
     <dimen name="input_pannel_emoji_icon_margin_top">20dp</dimen>
 
-    <dimen name="input_pannel_plus_container_padding">20dp</dimen>
+    <dimen name="input_pannel_plus_container_padding">12dp</dimen>
+    <dimen name="input_pannel_plus_icon_padding">8dp</dimen>
+    <dimen name="input_pannel_plus_icon_margin">4dp</dimen>
     <dimen name="input_pannel_plus_icon_size">56dp</dimen>
     <dimen name="input_pannel_plus_text_margin">8dp</dimen>
     <dimen name="input_pannel_plus_text_size">12sp</dimen>
 
     <dimen name="input_pannel_dot_indicator_size">20dp</dimen>
     <dimen name="input_pannel_dot_indicator_margin">2dp</dimen>
+
+    <dimen name="input_pannel_image_pick_thumb_height">100dp</dimen>
 </resources>

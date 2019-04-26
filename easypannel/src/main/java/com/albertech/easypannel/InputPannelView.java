@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.albertech.easypannel.func.image.ImagePickActivity;
+import com.albertech.easypannel.func.image.ImagePicker;
 import com.albertech.editpanel.base.IFunc;
 import com.albertech.editpanel.kernal.AbsIpView;
 import com.albertech.editpanel.kernal.IpMgrBuilder;
@@ -31,6 +33,8 @@ import com.albertech.easypannel.func.voice.IVoiceMsgContract;
 import com.albertech.easypannel.func.voice.VoiceIFunc;
 import com.albertech.easypannel.func.voice.VoicePresenterImpl;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -97,6 +101,18 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
         @Override
         public void onPlusItemClick(String name) {
             Log.e("AAA", name);
+            if ("相册".equals(name)) {
+                ImagePickActivity.start(getContext());
+            }
+        }
+    };
+
+    private final ImagePicker.OnImagePickListener IMAGE_PICK_LISTENER = new ImagePicker.OnImagePickListener() {
+        @Override
+        public void onImagePick(List<String> picked) {
+            if (mMsgSender != null && picked.size() > 0) {
+                mMsgSender.onImageSubmit(picked.toArray(new String[0]));
+            }
         }
     };
 
@@ -138,6 +154,7 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         VOICE_PRESENTER.releaseView();
+        ImagePicker.removeListener();
     }
 
 
@@ -248,6 +265,8 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
         VOICE_PRESENTER.bindView(mBtnTalk);
         mEt.addTextChangedListener(TEXT_WATCHER);
         mBtnSend.setOnClickListener(TEXT_SUBMITTER);
+
+        ImagePicker.setListener(IMAGE_PICK_LISTENER);
     }
 
     private void toggleEditOrVoice(boolean showEdit) {

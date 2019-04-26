@@ -5,10 +5,10 @@ import com.albertech.easypannel.R;
 public interface DefaultPlusConstant {
 
     int[] PAGE_0_RES = {
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher
+            R.drawable.ip_plus_album,
+            R.drawable.ip_plus_camera,
+            R.drawable.ip_plus_location,
+            R.drawable.ip_plus_stt
     };
 
     String[] PAGE_0_NAME = {

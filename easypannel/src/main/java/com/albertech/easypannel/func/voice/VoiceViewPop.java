@@ -21,12 +21,12 @@ public class VoiceViewPop implements IVoiceMsgContract.IVoiceView {
      * 音量指示器图片资源
      */
     private static final int[] VOLUME_INDICATORS = new int[]{
-            R.drawable.nt_img_voice_indicator_1,
-            R.drawable.nt_img_voice_indicator_2,
-            R.drawable.nt_img_voice_indicator_3,
-            R.drawable.nt_img_voice_indicator_4,
-            R.drawable.nt_img_voice_indicator_5,
-            R.drawable.nt_img_voice_indicator_6,
+            R.drawable.ip_bg_voice_indicator_1,
+            R.drawable.ip_bg_voice_indicator_2,
+            R.drawable.ip_bg_voice_indicator_3,
+            R.drawable.ip_bg_voice_indicator_4,
+            R.drawable.ip_bg_voice_indicator_5,
+            R.drawable.ip_bg_voice_indicator_6,
     };
 
     /**
@@ -56,7 +56,7 @@ public class VoiceViewPop implements IVoiceMsgContract.IVoiceView {
 
 
     public VoiceViewPop(Context context) {
-        mRootView = View.inflate(context, R.layout.nt_pop_voice_remind, null);
+        mRootView = View.inflate(context, R.layout.layout_pop_voice_remind, null);
         mWindow = new PopupWindow(mRootView, WRAP_CONTENT, WRAP_CONTENT);
 
         initView();

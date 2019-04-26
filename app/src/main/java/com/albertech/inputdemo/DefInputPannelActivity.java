@@ -45,7 +45,11 @@ public class DefInputPannelActivity extends AppCompatActivity {
 
             @Override
             public void onImageSubmit(String... paths) {
-
+                if (paths != null && paths.length > 0) {
+                    for (int i = 0; i < paths.length; i++) {
+                        Log.e("AAA", paths[i]);
+                    }
+                }
             }
         });
 

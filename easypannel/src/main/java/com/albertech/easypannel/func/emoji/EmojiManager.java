@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-class EmojiManager {
+public class EmojiManager {
 
     private static final Map<String, Integer> EMOJI_CODE_RES_MAP = new HashMap<>();
     private static final List<List<EmojiBean>> EMOJI_LIST = new ArrayList<>();
@@ -35,6 +35,25 @@ class EmojiManager {
 
     private EmojiManager() {
         throw new RuntimeException("This class should not be instantiate");
+    }
+
+
+    public static SpannableString decorateTextByEmoji(Context context, String text) {
+        SpannableString ss = new SpannableString(text);
+        Pattern pattern = Pattern.compile(mEmojiPattern);
+        Matcher matcher = pattern.matcher(ss);
+        while (matcher.find()){
+            String code = matcher.group();
+            int drawableRes = getDrawableResByCode(code);
+            if (drawableRes != 0){
+                Drawable drawable = context.getResources().getDrawable(drawableRes);
+                int size = (int) (1.3f * context.getResources().getDimensionPixelSize(R.dimen.input_pannel_edit_text_size));
+                drawable.setBounds(0,0, size, size);
+                ImageSpan span = new ImageSpan(drawable);
+                ss.setSpan(span,matcher.start(),matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+        return ss;
     }
 
 
@@ -101,6 +120,9 @@ class EmojiManager {
         }
     }
 
+    private static int getDrawableResByCode(String code) {
+        return EMOJI_CODE_RES_MAP.get(code);
+    }
 
     private static View createSingleEmojiPage(Context context, int pageIndex, OnEmojiClickListener listener) {
         View page = View.inflate(context, R.layout.item_emoji_page, null);
@@ -129,28 +151,6 @@ class EmojiManager {
         adapter.updateData(EMOJI_LIST.get(pageIndex));
         rv.setLayoutManager(new GridLayoutManager(rv.getContext(), mColumnCountEachPage));
         rv.setAdapter(adapter);
-    }
-
-    private static SpannableString decorateTextByEmoji(Context context, String text) {
-        SpannableString ss = new SpannableString(text);
-        Pattern pattern = Pattern.compile(mEmojiPattern);
-        Matcher matcher = pattern.matcher(ss);
-        while (matcher.find()){
-            String code = matcher.group();
-            int drawableRes = getDrawableResByCode(code);
-            if (drawableRes != 0){
-                Drawable drawable = context.getResources().getDrawable(drawableRes);
-                int size = (int) (1.3f * context.getResources().getDimensionPixelSize(R.dimen.input_pannel_edit_text_size));
-                drawable.setBounds(0,0, size, size);
-                ImageSpan span = new ImageSpan(drawable);
-                ss.setSpan(span,matcher.start(),matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-        }
-        return ss;
-    }
-
-    private static int getDrawableResByCode(String code) {
-        return EMOJI_CODE_RES_MAP.get(code);
     }
 
 }
