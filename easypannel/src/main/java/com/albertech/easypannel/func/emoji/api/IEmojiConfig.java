@@ -14,11 +14,6 @@ public interface IEmojiConfig extends Serializable {
     int getColumnCountEachPage();
 
     /**
-     * @return 表情点击回调
-     */
-    OnEmojiClickListener getOnEmojiClickListener();
-
-    /**
      * @return 表情图片资源二维数组 (int[表情页数][单页表情序号])
      */
     int[][] getEmojiRes();

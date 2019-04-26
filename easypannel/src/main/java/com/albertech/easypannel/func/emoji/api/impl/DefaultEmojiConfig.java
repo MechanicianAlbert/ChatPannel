@@ -11,11 +11,6 @@ public class DefaultEmojiConfig implements IEmojiConfig, DefaultEmojiConstant {
     }
 
     @Override
-    public OnEmojiClickListener getOnEmojiClickListener() {
-        return null;
-    }
-
-    @Override
     public int[][] getEmojiRes() {
         return ALL_RES;
     }

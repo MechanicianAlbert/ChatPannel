@@ -8,11 +8,6 @@ import com.albertech.easypannel.func.plus.api.OnPlusItemClickListener;
 public class CustomPlusConfig implements OnPlusItemClickListener, IPlusConfig, CustomPlusConstant {
 
     @Override
-    public OnPlusItemClickListener getOnPlusItemClickListener() {
-        return this;
-    }
-
-    @Override
     public int[][] getPlusRes() {
         return ALL_RES;
     }

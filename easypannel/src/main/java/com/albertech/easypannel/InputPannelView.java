@@ -163,20 +163,10 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
     @Override
     protected void onRegisterFunc(Set<IFunc> funcs) {
         if (useDefaultEmoji()) {
-            funcs.add(EmojiFunc.newInstance(new DefaultEmojiConfig() {
-                @Override
-                public OnEmojiClickListener getOnEmojiClickListener() {
-                    return EMOJI_WATCHER;
-                }
-            }));
+            funcs.add(EmojiFunc.newInstance(new DefaultEmojiConfig(), EMOJI_WATCHER));
         }
         if (useDefaultPlus()) {
-            funcs.add(PlusFunc.newInstance(new DefaultPlusConfig() {
-                @Override
-                public OnPlusItemClickListener getOnPlusItemClickListener() {
-                    return PLUS_WATCHER;
-                }
-            }));
+            funcs.add(PlusFunc.newInstance(new DefaultPlusConfig(), PLUS_WATCHER));
         }
         funcs.add(new VoiceIFunc());
     }
@@ -214,6 +204,7 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
 
     /**
      * 为消息发送接口设置实现
+     *
      * @param msgSender 外部发送消息接口的实现, 用于接收输入面板提交的文字/图片/短语音消息并发送
      */
     public final void setMsgSender(IMsgSender msgSender) {
@@ -224,6 +215,7 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
 
     /**
      * 为短语音消息录音文件设置存储路径
+     *
      * @return 录音文件存储位置的相对路径, 其父路径为系统 SDCard 路径
      */
     protected String getVoiceRecordFilePath() {

@@ -26,25 +26,36 @@ import java.util.regex.Pattern;
 
 class EmojiManager {
 
-    private final Map<String, Integer> EMOJI_CODE_RES_MAP = new HashMap<>();
-    private final List<List<EmojiBean>> EMOJI_LIST = new ArrayList<>();
+    private static final Map<String, Integer> EMOJI_CODE_RES_MAP = new HashMap<>();
+    private static final List<List<EmojiBean>> EMOJI_LIST = new ArrayList<>();
 
-    private int mColumnCountEachPage;
-    private OnEmojiClickListener mListener;
-    private String mPattern;
+    private static int mColumnCountEachPage;
+    private static String mEmojiPattern;
 
 
-    EmojiManager(IEmojiConfig config) {
+    private EmojiManager() {
+        throw new RuntimeException("This class should not be instantiate");
+    }
+
+
+    static void setEmojiConfig(IEmojiConfig config) {
         checkConfigValidation(config);
         initEmojiList(config);
 
         mColumnCountEachPage = config.getColumnCountEachPage();
-        mListener = config.getOnEmojiClickListener();
-        mPattern = config.getEmojiPattern();
+        mEmojiPattern = config.getEmojiPattern();
+    }
+
+    static List<View> creatEmojiPagers(Context context, OnEmojiClickListener listener) {
+        List<View> list = new ArrayList<>();
+        for (int i = 0; i < EMOJI_LIST.size(); i++) {
+            list.add(createSingleEmojiPage(context, i, listener));
+        }
+        return list;
     }
 
 
-    private void checkConfigValidation(IEmojiConfig config) {
+    private static void checkConfigValidation(IEmojiConfig config) {
         if (config == null) {
             throw new NullPointerException("Config should not be null");
         }
@@ -72,8 +83,9 @@ class EmojiManager {
         }
     }
 
-    private void initEmojiList(IEmojiConfig config) {
+    private static void initEmojiList(IEmojiConfig config) {
         EMOJI_CODE_RES_MAP.clear();
+        EMOJI_LIST.clear();
         int[][] res = config.getEmojiRes();
         String[][] code = config.getEmojiCode();
         for (int i = 0; i < res.length; i++) {
@@ -89,34 +101,26 @@ class EmojiManager {
         }
     }
 
-    List<View> creatEmojiPagers(Context context) {
-        List<View> list = new ArrayList<>();
-        for (int i = 0; i < EMOJI_LIST.size(); i++) {
-            list.add(createSingleEmojiPage(context, i));
-        }
-        return list;
-    }
 
-
-    private View createSingleEmojiPage(Context context, int pageIndex) {
+    private static View createSingleEmojiPage(Context context, int pageIndex, OnEmojiClickListener listener) {
         View page = View.inflate(context, R.layout.item_emoji_page, null);
         RecyclerView rv = page.findViewById(R.id.rv_page_emoji);
-        fillPageWithEmojiData(rv, pageIndex);
+        fillPageWithEmojiData(rv, pageIndex, listener);
         return page;
     }
 
-    private void fillPageWithEmojiData(final RecyclerView rv, int pageIndex) {
+    private static void fillPageWithEmojiData(final RecyclerView rv, int pageIndex, final OnEmojiClickListener listener) {
         EmojiGroupAdapter adapter = new EmojiGroupAdapter() {
             @Override
             public boolean onItemClick(int position, EmojiBean emojiBean) {
-                if (mListener != null) {
+                if (listener != null) {
                     if (position == getItemCount() - 1) {
-                        mListener.onBackspaceClick();
+                        listener.onBackspaceClick();
                     } else {
                         int res = emojiBean.RES;
                         String code = emojiBean.CODE;
                         SpannableString emoji = decorateTextByEmoji(rv.getContext(), code);
-                        mListener.onEmojiClick(emoji, res, code);
+                        listener.onEmojiClick(emoji, res, code);
                     }
                 }
                 return false;
@@ -127,9 +131,9 @@ class EmojiManager {
         rv.setAdapter(adapter);
     }
 
-    private SpannableString decorateTextByEmoji(Context context, String text) {
+    private static SpannableString decorateTextByEmoji(Context context, String text) {
         SpannableString ss = new SpannableString(text);
-        Pattern pattern = Pattern.compile(mPattern);
+        Pattern pattern = Pattern.compile(mEmojiPattern);
         Matcher matcher = pattern.matcher(ss);
         while (matcher.find()){
             String code = matcher.group();
@@ -145,7 +149,7 @@ class EmojiManager {
         return ss;
     }
 
-    private int getDrawableResByCode(String code) {
+    private static int getDrawableResByCode(String code) {
         return EMOJI_CODE_RES_MAP.get(code);
     }
 

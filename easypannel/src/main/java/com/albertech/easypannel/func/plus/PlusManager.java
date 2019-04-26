@@ -18,20 +18,29 @@ import java.util.List;
 
 class PlusManager {
 
-    private final List<List<PlusBean>> PLUS_LIST = new ArrayList<>();
-
-    private OnPlusItemClickListener mListener;
+    private static final List<List<PlusBean>> PLUS_LIST = new ArrayList<>();
 
 
     PlusManager(IPlusConfig config) {
-        checkConfigValidation(config);
-        initPlusList(config);
-
-        mListener = config.getOnPlusItemClickListener();
+        throw new RuntimeException("This class should not be instantiate");
     }
 
 
-    private void checkConfigValidation(IPlusConfig config) {
+    static void setPlusConfig(IPlusConfig config) {
+        checkConfigValidation(config);
+        initPlusList(config);
+    }
+
+    static List<View> creatPlusPagers(Context context, OnPlusItemClickListener listener) {
+        List<View> list = new ArrayList<>();
+        for (int i = 0; i < PLUS_LIST.size(); i++) {
+            list.add(createSinglePlusPage(context, i, listener));
+        }
+        return list;
+    }
+
+
+    private static void checkConfigValidation(IPlusConfig config) {
         if (config == null) {
             throw new NullPointerException("Config should not be null");
         }
@@ -53,7 +62,8 @@ class PlusManager {
         }
     }
 
-    private void initPlusList(IPlusConfig config) {
+    private static void initPlusList(IPlusConfig config) {
+        PLUS_LIST.clear();
         int[][] res = config.getPlusRes();
         String[][] code = config.getPlusName();
         for (int i = 0; i < res.length; i++) {
@@ -67,28 +77,19 @@ class PlusManager {
         }
     }
 
-    List<View> creatPlusPagers(Context context) {
-        List<View> list = new ArrayList<>();
-        for (int i = 0; i < PLUS_LIST.size(); i++) {
-            list.add(createSinglePlusPage(context, i));
-        }
-        return list;
-    }
-
-
-    private View createSinglePlusPage(Context context, int pageIndex) {
+    private static View createSinglePlusPage(Context context, int pageIndex, OnPlusItemClickListener listener) {
         View page = View.inflate(context, R.layout.item_plus_page, null);
         RecyclerView rv = page.findViewById(R.id.rv_page_plus);
-        fillPageWithEmojiData(rv, pageIndex);
+        fillPageWithEmojiData(rv, pageIndex, listener);
         return page;
     }
 
-    private void fillPageWithEmojiData(final RecyclerView rv, int pageIndex) {
+    private static void fillPageWithEmojiData(final RecyclerView rv, int pageIndex, final OnPlusItemClickListener listener) {
         PlusGroupAdapter adapter = new PlusGroupAdapter() {
             @Override
             public boolean onItemClick(int position, PlusBean plusBean) {
-                if (mListener != null) {
-                    mListener.onPlusItemClick(plusBean.NAME);
+                if (listener != null) {
+                    listener.onPlusItemClick(plusBean.NAME);
                 }
                 return false;
             }

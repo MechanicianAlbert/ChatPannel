@@ -1,32 +1,44 @@
 package com.albertech.easypannel.func.emoji;
 
 
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.albertech.common.base.pager.BasePagerAdapter;
 import com.albertech.easypannel.R;
 import com.albertech.easypannel.func.emoji.api.IEmojiConfig;
+import com.albertech.easypannel.func.emoji.api.OnEmojiClickListener;
 import com.albertech.easypannel.view.PagerDotIndicator;
 
 
 public class EmojiFunc extends EmojiFuncFragment {
 
+    private static final String CONFIG_KEY = "config";
+
     private final BasePagerAdapter<View> ADAPTER = new BasePagerAdapter<>();
 
-
-    private EmojiManager mEmojiManager;
+    private OnEmojiClickListener mListener;
 
     private ViewPager mVpEmoji;
     private PagerDotIndicator mIndicator;
 
 
-    public static EmojiFunc newInstance(IEmojiConfig config) {
+    public static EmojiFunc newInstance(IEmojiConfig config, OnEmojiClickListener listener) {
         EmojiFunc ef = new EmojiFunc();
-        ef.mEmojiManager = new EmojiManager(config);
+        Bundle b = new Bundle();
+        b.putSerializable(CONFIG_KEY, config);
+        ef.setArguments(b);
+        ef.mListener = listener;
         return ef;
     }
 
+
+    @Override
+    protected void initArgs(Bundle args) {
+        IEmojiConfig config = (IEmojiConfig) args.getSerializable(CONFIG_KEY);
+        EmojiManager.setEmojiConfig(config);
+    }
 
     @Override
     protected int layoutRes() {
@@ -41,7 +53,8 @@ public class EmojiFunc extends EmojiFuncFragment {
 
     @Override
     protected void initData() {
-        ADAPTER.updatePagers(mEmojiManager.creatEmojiPagers(getContext()));
+        ADAPTER.updatePagers(EmojiManager.creatEmojiPagers(getContext(), mListener));
+        mVpEmoji.removeAllViews();
         mVpEmoji.setAdapter(ADAPTER);
         mIndicator.setUpWithViewPager(mVpEmoji);
     }
