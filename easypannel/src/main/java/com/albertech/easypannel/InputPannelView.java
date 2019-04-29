@@ -18,6 +18,8 @@ import android.widget.EditText;
 
 import com.albertech.easypannel.func.image.ImagePickActivity;
 import com.albertech.easypannel.func.image.ImagePicker;
+import com.albertech.easypannel.func.stt.OnSttResultListener;
+import com.albertech.easypannel.func.stt.SttFunc;
 import com.albertech.editpanel.base.IFunc;
 import com.albertech.editpanel.kernal.AbsIpView;
 import com.albertech.editpanel.kernal.IpMgrBuilder;
@@ -73,20 +75,7 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
         @Override
         public void onEmojiClick(SpannableString emoji, int res, String code) {
             Log.e("AAA", "Emoji info: Res=" + res + ", Code=" + code);
-            int start = mEt.getSelectionStart();
-            int end = mEt.getSelectionEnd();
-            int newSelection = start + emoji.length();
-            Editable newText = mEt.getText().replace(start, end, emoji);
-
-            Log.e("AAA", "Text update info:"
-                    + "\nSelection start: " + start
-                    + "\nSelection end: " + end
-                    + "\nNew selection: " + newSelection
-                    + "\nNew text: " + newText
-            );
-
-            mEt.setText(newText);
-            mEt.setSelection(newSelection);
+            updateEdit(emoji);
         }
 
         @Override
@@ -103,6 +92,8 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
             Log.e("AAA", name);
             if ("相册".equals(name)) {
                 ImagePickActivity.start(getContext());
+            } else if ("语音输入".equals(name)) {
+                setFuncStatus(FUNC_STT);
             }
         }
     };
@@ -113,6 +104,13 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
             if (mMsgSender != null && picked.size() > 0) {
                 mMsgSender.onImageSubmit(picked.toArray(new String[0]));
             }
+        }
+    };
+
+    private final OnSttResultListener STT_LISTENER = new OnSttResultListener() {
+        @Override
+        public void onSttResult(CharSequence result) {
+            updateEdit(result);
         }
     };
 
@@ -186,6 +184,7 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
             funcs.add(PlusFunc.newInstance(new DefaultPlusConfig(), PLUS_WATCHER));
         }
         funcs.add(new VoiceIFunc());
+        funcs.add(SttFunc.newInstance(STT_LISTENER));
     }
 
     @Override
@@ -282,6 +281,25 @@ public class InputPannelView extends AbsIpView implements IFuncStatus {
     private void togglePlusOrSend(boolean showPlus) {
         mBtnPlus.setVisibility(showPlus ? VISIBLE : INVISIBLE);
         mBtnSend.setVisibility(showPlus ? INVISIBLE : VISIBLE);
+    }
+
+    private void updateEdit(CharSequence c) {
+        if (mEt != null) {
+            int start = mEt.getSelectionStart();
+            int end = mEt.getSelectionEnd();
+            int newSelection = start + c.length();
+            Editable newText = mEt.getText().replace(start, end, c);
+            mEt.setText(newText);
+            mEt.setSelection(newSelection);
+            Log.e("AAA", "Text update info:"
+                    + "\nSelection start: " + start
+                    + "\nSelection end: " + end
+                    + "\nNew selection: " + newSelection
+                    + "\nNew text: " + newText
+            );
+        } else {
+            Log.e("AAA", "EditText is null, updateEdit() would do nothing");
+        }
     }
 
 }

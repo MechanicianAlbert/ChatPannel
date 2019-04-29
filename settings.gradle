@@ -1,2 +1,4 @@
-include ':easypannel', ':app'
+include ':app'
+include ':easypannel'
+//include ':iflysttlib'
 include ':chatpannel'

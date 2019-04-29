@@ -10,4 +10,7 @@
     <string name="str_image_pick_count">已选 %s 张</string>
     <string name="str_image_pick_confirm">确认选择</string>
     <string name="str_image_pick_cancel">取消</string>
+
+    <string name="str_stt_click_to_start">点击识别</string>
+    <string name="str_stt_click_to_stop">点击停止</string>
 </resources>
